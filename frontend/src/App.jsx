@@ -26,29 +26,41 @@ function App() {
     // Load Movies
     // =========================
 
-    const loadMovies = async () => {
-        try {
-            setLoading(true);
-            setError("");
-
-            const response = await getMovies();
-
-            setMovies(response.data);
-        } catch (error) {
-            console.error("Error loading movies:", error);
-
-            setError(
-                error.response?.data?.message ||
-                "Unable to load movies. Please make sure the backend is running."
-            );
-        } finally {
-            setLoading(false);
-        }
-    };
-
     // Load movies when page opens
     useEffect(() => {
+        let isMounted = true;
+
+        const loadMovies = async () => {
+            try {
+                setLoading(true);
+                setError("");
+
+                const response = await getMovies();
+
+                if (isMounted) {
+                    setMovies(response.data);
+                }
+            } catch (error) {
+                console.error("Error loading movies:", error);
+
+                if (isMounted) {
+                    setError(
+                        error.response?.data?.message ||
+                        "Unable to load movies. Please make sure the backend is running."
+                    );
+                }
+            } finally {
+                if (isMounted) {
+                    setLoading(false);
+                }
+            }
+        };
+
         loadMovies();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
     // =========================

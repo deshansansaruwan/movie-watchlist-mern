@@ -3,7 +3,7 @@ import cors from 'cors';
 import 'dotenv/config';
 import connectDB from './config/db.js';
 import movieRoutes from './routes/movieRoutes.js';
-import errorHandler from './middleware/errorHandler.js';
+import errorMiddleware from './middleware/errorMiddleware.js';
 
 
 const app = express();
@@ -26,4 +26,4 @@ app.listen(port,() => {
     console.log('server running on port ' + port);
 });
 
-app.use(errorHandler);
+app.use(errorMiddleware);
